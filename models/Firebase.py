@@ -4,11 +4,9 @@ from firebase_admin import firestore
 
 class Firebase:
 
-
     def __init__(self):  
         self._serviceAccountPath = r'./static/ServiceAccount.json'
     
-
     def setServiceAccountPath(self, path):
         self._serviceAccountPath = path
 
@@ -26,6 +24,15 @@ class Firebase:
         blob = bucket.blob(filePath)
         blob.cache_control = "no-cache"
         return blob
+
+    def get_firebase_id(self, senderEmail):
+        db = self._db
+        collection = db.collection(u'MaintenanceTicket')
+        document = collection.document()
+        document.set({"seenBy": [], "createdBy": senderEmail})
+        return document.id
+        
+
        
 
 

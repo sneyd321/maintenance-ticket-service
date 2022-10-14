@@ -1,10 +1,14 @@
 {
-    "registration_token": "eGWVvd0EQKOwpISkeH2DDI:APA91bG5BqmSKnZ4digki6Ris9wJrS7MFaNV-AyOvVGviWP6lu13Pi4V9Pzi5yzJlElLOHAh4Vn6CUru9QI0c7FCtvMnoRNyARLATa1zQBPrOBpnHkoZ4oiCIWw9qnowTCwegB1Fr3BY",
-    "name": "MaintenanceTicket",
+    "houseId": 3,
     "description": {
         "descriptionText": "fdagfdasfsdfasdfa"
     },
     "urgency": {
         "name": "Low"
+    },
+    "sender": {
+        "firstName": "Ryan",
+        "lastName": "Sneyd",
+        "email": "a@s.com"
     }
 }

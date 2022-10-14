@@ -1,12 +1,4 @@
-
-from sqlalchemy.exc import OperationalError, IntegrityError
-from models.models import MaintenanceTicket
 from models.monad import RepositoryMaybeMonad
-from sqlalchemy.orm import declarative_base
-
-
-Base = declarative_base()
-
 
 class Repository:
 
@@ -14,47 +6,33 @@ class Repository:
         self.db = db
 
 
-    async def create_all(self):
-        async with self.db.engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-            await self.db.commit()
+    async def insert(self, maintenanceTicket):
+        async with self.db.get_session() as session:
+           
+            monad = await RepositoryMaybeMonad(maintenanceTicket) \
+                .bind(self.db.insert)
+            maintenanceTicketFromDB = monad.get_param_at(0)
+            maintenanceTicketFromDB.setImageURL(maintenanceTicketFromDB.id)
+            monad = await RepositoryMaybeMonad(maintenanceTicketFromDB) \
+                .bind(self.db.update)
+            if monad.has_errors():
+                return monad
+            return await RepositoryMaybeMonad() \
+                .bind(self.db.commit)
             
+  
+           
 
-    async def insert(self, data):
-        async with self.db.get_session():
-            monad = await RepositoryMaybeMonad(data).bind(self.db.insert)
-            if monad.error_status:
-                await self.db.rollback()
-            else:
-                await self.db.commit()
-            return monad
-        
-                
-    async def update(self, data):
-        async with self.db.get_session():
-            monad = await RepositoryMaybeMonad(data).bind(self.db.update)
-            if monad.error_status:
-                await self.db.rollback()
-            else:
-                await self.db.commit()
-            return monad
 
-    async def get(self, data):
+
+    async def get(self, maintenanceTicket):
         async with self.db.get_session():
-            result = await self.db.get(data)
-            if result:
-                await self.db.commit()
-            else:
-                await self.db.rollback()
-            return result
-            
-            
-            
-    async def get_all(self, data):
+            monad = await RepositoryMaybeMonad(maintenanceTicket) \
+                .bind_data(self.db.get)
+            return await monad.bind(self.db.commit)
+         
+    async def get_all(self, maintenanceTicket):
         async with self.db.get_session():
-            results = await self.db.get_by_house_id(data)
-            if results:
-                await self.db.commit()
-            else:
-                await self.db.rollback()
-            return results
+            return await RepositoryMaybeMonad(maintenanceTicket) \
+                .bind_data(self.db.get_by_house_id)
+            

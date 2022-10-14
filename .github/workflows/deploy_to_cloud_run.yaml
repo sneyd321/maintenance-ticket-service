@@ -1,0 +1,36 @@
+name: Deploy to cloud run
+on: [workflow_dispatch]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: 'projects/959426188245/locations/global/workloadIdentityPools/github-action-pool-1/providers/github-action-provider-1'
+          service_account: 'artifact-repository-access@roomr-222721.iam.gserviceaccount.com'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
+          docker build -t us-central1-docker.pkg.dev/roomr-222721/roomr-docker-repo/tenant-service .
+          docker push us-central1-docker.pkg.dev/roomr-222721/roomr-docker-repo/tenant-service
+      - name: Deploy to Cloud run
+        run: |
+
+          gcloud run deploy tenant-service --region=us-central1 --image us-central1-docker.pkg.dev/roomr-222721/roomr-docker-repo/tenant-service:latest --allow-unauthenticated --update-secrets=DB_PASS=DB_PASS:1 --update-env-vars DB_HOST=10.128.0.19,DB_USER=service
+          
+    
+          
+      
