@@ -29,7 +29,7 @@ jobs:
       - name: Deploy to Cloud run
         run: |
 
-          gcloud run deploy maintenance-ticket-service --region=us-central1 --image us-central1-docker.pkg.dev/roomr-222721/roomr-docker-repo/maintenance-ticket-service:latest --allow-unauthenticated --update-secrets=DB_PASS=DB_PASS:1,/models/static/ServiceAccount.json=projects/959426188245/secrets/firebase_service_account:1 --update-env-vars DB_HOST=10.128.0.20,DB_USER=root
+          gcloud run deploy maintenance-ticket-service --region=us-central1 --image us-central1-docker.pkg.dev/roomr-222721/roomr-docker-repo/maintenance-ticket-service:latest --allow-unauthenticated --update-secrets=DB_PASS=DB_PASS:1,/usr/src/app/models/static/ServiceAccount.json=projects/959426188245/secrets/firebase_service_account:1 --update-env-vars DB_HOST=10.128.0.20,DB_USER=root
           
     
           
