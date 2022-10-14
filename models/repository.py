@@ -11,10 +11,7 @@ class Repository:
            
             monad = await RepositoryMaybeMonad(maintenanceTicket) \
                 .bind(self.db.insert)
-            if monad.has_errors():
-                return monad
-            return await RepositoryMaybeMonad() \
-                .bind(self.db.commit)
+           
             maintenanceTicketFromDB = monad.get_param_at(0)
             maintenanceTicketFromDB.setImageURL(maintenanceTicketFromDB.id)
             monad = await RepositoryMaybeMonad(maintenanceTicketFromDB) \
