@@ -34,3 +34,7 @@ jobs:
       - name: Test with pytest
         run: |
           pytest tests/test_outages.py --asyncio-mode=strict
+      - name: Delete service account key
+        run: |
+          python ./models/static/remove_key.py
+        
