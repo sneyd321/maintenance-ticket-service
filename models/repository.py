@@ -11,7 +11,7 @@ class Repository:
            
             monad = await RepositoryMaybeMonad(maintenanceTicket) \
                 .bind(self.db.insert)
-           
+            await session.flush()
             maintenanceTicketFromDB = monad.get_param_at(0)
             maintenanceTicketFromDB.setImageURL(maintenanceTicketFromDB.id)
             monad = await RepositoryMaybeMonad(maintenanceTicketFromDB) \

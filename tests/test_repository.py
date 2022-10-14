@@ -10,7 +10,6 @@ firebase = Firebase()
 firebase.setServiceAccountPath(r"./models/static/ServiceAccount.json")
 firebase.init_app()
 
-@pytest.mark.skip(reason="Failing due to noting triggering the integrity error. Works locally")
 @pytest.mark.asyncio
 async def test_Maintenance_Ticket_Service_returns_an_error_on_integrity_error():
     db = DB("test", "homeowner", "localhost", "roomr")
@@ -18,8 +17,7 @@ async def test_Maintenance_Ticket_Service_returns_an_error_on_integrity_error():
     with open("./tests/test.json", mode="r") as test:
         maintenanceTicketData = json.load(test)
         maintenanceTicket = MaintenanceTicket(firebase, **maintenanceTicketData, id=1)
-    monad = await asyncio.wait_for(repository.insert(maintenanceTicket), timeout=None)
-
+    monad = await repository.insert(maintenanceTicket)
     monad = await repository.insert(maintenanceTicket)
     assert monad.error_status == {"status": 409, "reason": "Failed to insert data into database"}
 
