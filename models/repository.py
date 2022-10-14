@@ -30,7 +30,7 @@ class Repository:
         async with self.db.get_session():
             monad = await RepositoryMaybeMonad(maintenanceTicket) \
                 .bind_data(self.db.get)
-            return await monad.bind(self.db.commit)
+           
          
     async def get_all(self, maintenanceTicket):
         async with self.db.get_session():
