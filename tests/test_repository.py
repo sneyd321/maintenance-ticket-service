@@ -16,18 +16,12 @@ async def test_Maintenance_Ticket_Service_returns_an_error_on_integrity_error():
     repository = Repository(db)
     with open("./tests/test.json", mode="r") as test:
         maintenanceTicketData = json.load(test)
-        maintenanceTicket = MaintenanceTicket(firebase, **maintenanceTicketData, id=1)
+        maintenanceTicket = MaintenanceTicket(firebase, **maintenanceTicketData)
+        maintenanceTicket.id = 1
     monad = await repository.insert(maintenanceTicket)
     monad = await repository.insert(maintenanceTicket)
     assert monad.error_status == {"status": 409, "reason": "Failed to insert data into database"}
 
-@pytest.mark.asyncio
-async def test_Maintenance_Ticket_Service_returns_not_found_when_querying_one_entry():
-    db = DB("test", "homeowner", "localhost", "roomr")
-    repository = Repository(db)
-    maintenanceTicket = MaintenanceTicket(firebase, id=-1)
-    monad = await repository.get(maintenanceTicket)
-    assert monad.error_status == {"status": 404, "reason": "No data in repository monad"}
 
 @pytest.mark.asyncio
 async def test_Maintenance_Ticket_Service_returns_empty_list_when_when_querying_multiple_entries():

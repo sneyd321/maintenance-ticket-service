@@ -30,6 +30,18 @@ target_metadata = Base.metadata
 # ... etc.
 
 
+def include_name(name, type_, parent_names):
+    if type_ == "schema":
+        return name in [None, "schema_one", "schema_two"]
+    elif type_ == "table":
+        # use schema_qualified_table_name directly
+        return (
+            parent_names["schema_qualified_table_name"] in
+            target_metadata.tables
+        )
+    else:
+        return True
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -43,9 +55,12 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
+    
     context.configure(
         url=url,
         target_metadata=target_metadata,
+        include_name = include_name,
+        include_schemas = False,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )

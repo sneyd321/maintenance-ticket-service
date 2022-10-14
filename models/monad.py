@@ -32,7 +32,7 @@ class RepositoryMaybeMonad:
         except IntegrityError:
             return RepositoryMaybeMonad(None, error_status={"status": 409, "reason": "Failed to insert data into database"})
         except PendingRollbackError:
-            return RepositoryMaybeMonad(None, error_status={"status": 502, "reason": "Failed to connect to database but also pending rollback error"})
+            return RepositoryMaybeMonad(None, error_status={"status": 500, "reason": "Failed to connect to database but also pending rollback error"})
     
     async def bind_data(self, function: Callable):
         """

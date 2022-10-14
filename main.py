@@ -41,14 +41,5 @@ async def get_maintenance_ticket_by_house_id(houseId: int):
         return HTTPException(status_code=monad.error_status["status"], detail=monad.error_status["reason"])
     return [result.to_json() for result in monad.get_param_at(0)]
 
-@app.get("/MaintenanceTicket/{maintenanceTicketId}")
-async def get_maintenance_ticket(maintenanceTicketId: int):
-    maintenanceTicket = MaintenanceTicket(firebase, id=maintenanceTicketId)
-    monad = await repository.get(maintenanceTicket)
-    if monad.has_errors():
-        return HTTPException(status_code=monad.error_status["status"], detail=monad.error_status["reason"])
-    return monad.get_param_at(0).to_json()
-
-
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8083)

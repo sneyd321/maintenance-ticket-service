@@ -15,12 +15,11 @@ class MaintenanceTicket(Base):
     description = relationship("Description", lazy="joined", uselist=False, backref="maintenance_ticket")
     sender = relationship("Sender", lazy="joined", uselist=False, backref="maintenance_ticket")
     name = Column(String(50), nullable=False)
-    imageURL = Column(String(223), nullable=True)
+    imageURL = Column(String(223), unique=True)
     datePosted = Column(Date(), nullable=False)
     firebaseId = Column(String(20), nullable=False)
     
     def __init__(self, firebase, **kwargs):
-        self.id = kwargs.get("id")
         self.houseId = kwargs.get("houseId")
         self.name = "MaintenanceTicket"
         self.urgency = Urgency(**kwargs.get("urgency", {}))

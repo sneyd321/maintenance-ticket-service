@@ -38,6 +38,9 @@ class DB:
     async def rollback(self):
         await self.session.rollback()
 
+    async def flush(self):
+        await self.session.flush()
+
     
     
     async def update(self, data):
