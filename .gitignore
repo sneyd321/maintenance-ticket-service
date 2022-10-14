@@ -8,3 +8,4 @@ venv
 scripts/versions/*
 !scripts/versions/.gitkeep
 models/static/ServiceAccount.json
+
