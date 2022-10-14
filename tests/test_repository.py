@@ -17,7 +17,7 @@ async def test_Maintenance_Ticket_Service_returns_an_error_on_integrity_error():
     with open("./tests/test.json", mode="r") as test:
         maintenanceTicketData = json.load(test)
         maintenanceTicket = MaintenanceTicket(firebase, **maintenanceTicketData, id=1)
-    monad = await asyncio.wait_for(repository.insert(maintenanceTicket))
+    monad = await asyncio.wait_for(repository.insert(maintenanceTicket), timeout=None)
 
     monad = await repository.insert(maintenanceTicket)
     assert monad.error_status == {"status": 409, "reason": "Failed to insert data into database"}
