@@ -19,7 +19,7 @@ jobs:
           service_account: 'artifact-repository-access@roomr-222721.iam.gserviceaccount.com'
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
-      - name: Create Firebase Service service_account
+      - name: Create Firebase Service Account
         run: |
           gcloud iam service-accounts keys create ./models/static/ServiceAccount.json --iam-account=firebase-adminsdk-rbs1y@roomr-222721.iam.gserviceaccount.com
       - name: Set up Python 3.8

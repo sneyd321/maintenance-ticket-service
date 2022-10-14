@@ -46,6 +46,12 @@ jobs:
         run: |
           alembic revision --autogenerate
           alembic upgrade head
+      - name: Create Firebase Service Account
+        run: |
+          gcloud iam service-accounts keys create ./models/static/ServiceAccount.json --iam-account=firebase-adminsdk-rbs1y@roomr-222721.iam.gserviceaccount.com
       - name: Test with pytest
         run: |
           pytest tests/test_repository.py --asyncio-mode=strict
+      - name: Delete Service Account Key
+        run: |
+          python ./models/static/remove_key.py
