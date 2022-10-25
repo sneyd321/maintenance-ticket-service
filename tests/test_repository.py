@@ -30,3 +30,12 @@ async def test_Maintenance_Ticket_Service_returns_empty_list_when_when_querying_
     maintenanceTicket = MaintenanceTicket(firebase, houseId=-1)
     monad = await repository.get_all(maintenanceTicket)
     assert monad.get_param_at(0) == []
+
+@pytest.mark.asyncio
+async def test_Maintenance_Ticket_Service_returns_null_with_invalid_maintenance_ticket_id():
+    db = DB("test", "homeowner", "localhost", "roomr")
+    repository = Repository(db)
+    maintenanceTicket = MaintenanceTicket(firebase, houseId=1)
+    maintenanceTicket.id = -1
+    monad = await repository.get(maintenanceTicket)
+    assert monad.get_param_at(0) == None

@@ -34,7 +34,15 @@ async def create_maintenance_ticket(request: MaintenanceTicketSchema):
     return maintenanceTicket.to_json()
   
 @app.get("/House/{houseId}/MaintenanceTicket")
-async def get_maintenance_ticket_by_house_id(houseId: int):
+async def get_maintenance_ticket_by_house_id(houseId: int, query: Union[int, None] = None):
+    if query:
+        maintenanceTicket = MaintenanceTicket(firebase, houseId=houseId)
+        maintenanceTicket.id = query
+        monad = await repository.get(maintenanceTicket)
+        if monad.has_errors():
+            return HTTPException(status_code=monad.error_status["status"], detail=monad.error_status["reason"])
+        return monad.get_param_at(0).to_json()
+
     maintenanceTicket = MaintenanceTicket(firebase, houseId=houseId)
     monad = await repository.get_all(maintenanceTicket)
     if monad.has_errors():

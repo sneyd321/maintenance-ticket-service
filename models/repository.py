@@ -26,4 +26,9 @@ class Repository:
         async with self.db.get_session():
             return await RepositoryMaybeMonad(maintenanceTicket) \
                 .bind_data(self.db.get_by_house_id)
+
+    async def get(self, maintenanceTicket):
+        async with self.db.get_session():
+            return await RepositoryMaybeMonad(maintenanceTicket) \
+                .bind_data(self.db.get)
             

@@ -30,15 +30,10 @@ target_metadata = Base.metadata
 # ... etc.
 
 
-def include_name(name, type_, parent_names):
-    if type_ == "schema":
-        return name in [None, "schema_one", "schema_two"]
-    elif type_ == "table":
-        # use schema_qualified_table_name directly
-        return (
-            parent_names["schema_qualified_table_name"] in
-            target_metadata.tables
-        )
+def include_object(object, name, type_, reflected, compare_to):
+
+    if (type_ == "table" or type_ == "index") and reflected and compare_to is None:
+        return False
     else:
         return True
 
@@ -70,7 +65,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata, include_object = include_object)
 
     with context.begin_transaction():
         context.run_migrations()
